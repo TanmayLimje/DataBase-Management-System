@@ -1,0 +1,185 @@
+Statement:
+
+Execute DDL/DML statements which demonstrate the use of views. Update the base
+table using its corresponding view.
+
+-----------------------------------------
+		## Views ##
+-----------------------------------------
+
+mysql> create database view;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use view
+Database changed
+
+mysql> create table stu_details(rollno int primary key, name varchar(20), address varchar(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc stu_details;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| rollno  | int         | NO   | PRI | NULL    |       |
+| name    | varchar(20) | YES  |     | NULL    |       |
+| address | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into stu_details values (101,"Micheal","Scranton"),(102,"Jim","Philly"),(103,"Dwight","ShrutFarm"),(104,"Pam","Scranton"),(105,"Holly","Nashua");
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from stu_details;
++--------+---------+-----------+
+| rollno | name    | address   |
++--------+---------+-----------+
+|    101 | Micheal | Scranton  |
+|    102 | Jim     | Philly    |
+|    103 | Dwight  | ShrutFarm |
+|    104 | Pam     | Scranton  |
+|    105 | Holly   | Nashua    |
++--------+---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> create table marks(id int , name varchar(20), age int, mark int)
+    -> ;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc marks;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int         | YES  |     | NULL    |       |
+| name  | varchar(20) | YES  |     | NULL    |       |
+| age   | int         | YES  |     | NULL    |       |
+| mark  | int         | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into marks values (101,"Micheal",47,81),(102,"Jim",36,86),(103,"Dwight",37,89),(104,"Pam",35,83),(105,"Holly",45,91);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from marks;
++------+---------+------+------+
+| id   | name    | age  | mark |
++------+---------+------+------+
+|  101 | Micheal |   47 |   81 |
+|  102 | Jim     |   36 |   86 |
+|  103 | Dwight  |   37 |   89 |
+|  104 | Pam     |   35 |   83 |
+|  105 | Holly   |   45 |   91 |
++------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> create view detailview as select name,address from stu_details;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from detailview;
++---------+-----------+
+| name    | address   |
++---------+-----------+
+| Micheal | Scranton  |
+| Jim     | Philly    |
+| Dwight  | ShrutFarm |
+| Pam     | Scranton  |
+| Holly   | Nashua    |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> drop view detailview;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create view detailview as select name,address from stu_details where rollno > 103;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from detailview;
++-------+----------+
+| name  | address  |
++-------+----------+
+| Pam   | Scranton |
+| Holly | Nashua   |
++-------+----------+
+2 rows in set (0.00 sec)
+
+mysql> update detailview set address = "Scranton" where name = "Holly";
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from detailview;
++-------+----------+
+| name  | address  |
++-------+----------+
+| Pam   | Scranton |
+| Holly | Scranton |
++-------+----------+
+2 rows in set (0.00 sec)
+
+mysql> delete from detailview where name = "Pam";
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from detailview;
++-------+----------+
+| name  | address  |
++-------+----------+
+| Holly | Scranton |
++-------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from stu_details;
++--------+---------+-----------+
+| rollno | name    | address   |
++--------+---------+-----------+
+|    101 | Micheal | Scranton  |
+|    102 | Jim     | Philly    |
+|    103 | Dwight  | ShrutFarm |
+|    105 | Holly   | Scranton  |
++--------+---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> drop view detailview;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create view marksview as select name,mark,age from marks where age is not null with check option;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from marksview;
++---------+------+------+
+| name    | mark | age  |
++---------+------+------+
+| Micheal |   81 |   47 |
+| Jim     |   86 |   36 |
+| Dwight  |   89 |   37 |
+| Pam     |   83 |   35 |
+| Holly   |   91 |   45 |
++---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> insert into marks values (106,"Andy",NULL,89);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from marksview;
++---------+------+------+
+| name    | mark | age  |
++---------+------+------+
+| Micheal |   81 |   47 |
+| Jim     |   86 |   36 |
+| Dwight  |   89 |   37 |
+| Pam     |   83 |   35 |
+| Holly   |   91 |   45 |
++---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from marks;
++------+---------+------+------+
+| id   | name    | age  | mark |
++------+---------+------+------+
+|  101 | Micheal |   47 |   81 |
+|  102 | Jim     |   36 |   86 |
+|  103 | Dwight  |   37 |   89 |
+|  104 | Pam     |   35 |   83 |
+|  105 | Holly   |   45 |   91 |
+|  106 | Andy    | NULL |   89 |
++------+---------+------+------+
+6 rows in set (0.00 sec)
