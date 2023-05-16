@@ -1,0 +1,161 @@
+Statement: 
+
+Write and execute PL/SQL stored procedure and function to perform a suitable
+task on the database. Demonstrate its use.
+
+-------------------------------------------------
+		## Procedure ##
+-------------------------------------------------
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| demo               |
+| er                 |
+| information_schema |
+| kursor             |
+| mysql              |
+| performance_schema |
+| sys                |
+| tanny              |
+| twentyeightfour    |
+| world              |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> create table t1(id int, name varchar(20));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into t1 values (1101,"Eren"),(1102,"Armin"),(1103,"Mikasa"),(1104,"Connie"),(1105,"Jean");
+Query OK, 5 rows affected (0.00 sec)
+
+------------------------------------------------------------------------
+
+mysql> delimiter //
+mysql> create procedure p1()
+    -> begin
+    -> select id,name from t1;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call p1();
++------+--------+
+| id   | name   |
++------+--------+
+| 1101 | Eren   |
+| 1102 | Armin  |
+| 1103 | Mikasa |
+| 1104 | Connie |
+| 1105 | Jean   |
++------+--------+
+5 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+------------------------------------------------------
+
+mysql> delimiter //
+mysql> create procedure hello()
+    -> begin
+    -> select 'Hello zanny!!';
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call hello();
++---------------+
+| Hello zanny!! |
++---------------+
+| Hello zanny!! |
++---------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+------------------------------------------------------------
+
+mysql> delimiter //
+mysql> create procedure calculate_sum()
+    -> begin
+    -> declare a,b,c int;
+    -> set a = 25;
+    -> set b = 25;
+    -> set c=a+b;
+    -> select a,b,c as sum;
+    -> end //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call calculate_sum();
++------+------+------+
+| a    | b    | sum  |
++------+------+------+
+|   25 |   25 |   50 |
++------+------+------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+------------------------------------------------------------------
+			## FUNCTIONS ##
+------------------------------------------------------------------
+
+mysql> create function hello(p char(20))
+    -> returns char(20) deterministic
+    -> return concat('Hello everyone',p);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select hello('world');
++---------------------+
+| hello('world')      |
++---------------------+
+| Hello everyoneworld |
++---------------------+
+1 row in set (0.00 sec)
+
+-------------------------------------------------------------
+
+mysql> delimiter //
+mysql> create function calculate_grade(s1 int,s2 int,s3 int)
+    -> returns varchar(20) deterministic
+    -> begin
+    -> declare t int;
+    -> declare grade varchar(20);
+    -> set t=(s1+s2+s3)/3;
+    -> if t>80 then
+    -> set grade='Distinction';
+    -> else if(t>=75 and t<=80) then
+    -> set grade= 'A+';
+    -> else if(t>=71 and t<=74) then
+    -> set grade= 'A';
+    -> else if(t>=65 and t<=70) then
+    -> set grade= 'B+';
+    -> else if(t>=60 and t<=64) then
+    -> set grade= 'B';
+    -> else if(t>=55 and t<=59) then
+    -> set grade= 'C+';
+    -> else if(t>=50 and t<=54) then
+    -> set grade= 'C';
+    -> else if(t>=35 and t<=40) then
+    -> set grade= 'Fail';
+    -> end if;
+    -> return(grade);
+    -> end //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+mysql> select Roll_no,Name,sub1,sub2,sub3,cal_grade(sub1,sub2,sub3) as
+Grade from stud;
++--------+-------+------+------+------+-------------+
+| rollno | name  | pbl_ | dbms | math | grade       |
++--------+-------+------+------+------+-------------+
+|      1 | Jimmy |   91 |   95 |   96 | Distinction |
+|      2 | Liam  |   81 |   85 |   79 | Distinction |
+|      3 | Lisha |   68 |   61 |   66 | B           |
+|      4 | Nayan |   74 |   79 |   70 | A           |
+|      5 | Anush |   50 |   55 |   60 | C+          |
+|      6 | Nimya |   21 |   35 |   30 | Fail        |
++--------+-------+------+------+------+-------------+
+6 rows in set (0.00 sec)
