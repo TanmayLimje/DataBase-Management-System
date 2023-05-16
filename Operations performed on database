@@ -1,0 +1,362 @@
+Statement:
+
+Perform following SQL queries on the database 
+  a.Implementation of relational operators in SQL
+  b.Boolean operators and pattern matching
+  c.Arithmetic operations and built in functions
+  d.Group By, Order By ,Having, Limit
+  e.Processing Date and Time functions
+  f.Join- Natural Join, Join, Left join, Right Join, Joining multiple tables.
+
+
+---------------------------------------------------------------------------------
+Relational operations
+---------------------------------------------------------------------------------
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| demo               |
+| er                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| tanny              |
+| world              |
++--------------------+
+8 rows in set (0.01 sec)
+
+mysql> use er;
+Database changed
+
+mysql> show tables;
++--------------+
+| Tables_in_er |
++--------------+
+| admin        |
+| books        |
+| borrow       |
+| publisher    |
+| student      |
++--------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student where id = 1;
++------+----------+----------+----------+------+
+| s_id | s_branch | s_gender | s_name   | id   |
++------+----------+----------+----------+------+
+|    1 | IT       | M        | Sunandan |    1 |
+|    2 | IT       | F        | Aanchal  |    1 |
++------+----------+----------+----------+------+
+2 rows in set (0.01 sec)
+
+mysql> select * from student where id != 1;
++------+----------+----------+-----------+------+
+| s_id | s_branch | s_gender | s_name    | id   |
++------+----------+----------+-----------+------+
+|    3 | IT       | M        | Manthan   |    2 |
+|    4 | IT       | F        | Sanskriti |    2 |
++------+----------+----------+-----------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from books where price > 300;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  102 | PA     |   400 | Kamna S     |     1300 |    2 |    1 |  171 |
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
++------+--------+-------+-------------+----------+------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from books where price <= 600;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  102 | PA     |   400 | Kamna S     |     1300 |    2 |    1 |  171 |
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
++------+--------+-------+-------------+----------+------+------+------+
+4 rows in set (0.00 sec)
+
+-------------------------------------------------------------------------------------------
+Boolean Operations
+-------------------------------------------------------------------------------------------
+
+mysql> select * from books where price <= 600 and s_id = 1;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
++------+--------+-------+-------------+----------+------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from books where price IN(400,600);
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  102 | PA     |   400 | Kamna S     |     1300 |    2 |    1 |  171 |
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
++------+--------+-------+-------------+----------+------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from student where s_name not like 'S%';
++------+----------+----------+---------+------+
+| s_id | s_branch | s_gender | s_name  | id   |
++------+----------+----------+---------+------+
+|    2 | IT       | F        | Aanchal |    1 |
+|    3 | IT       | M        | Manthan |    2 |
++------+----------+----------+---------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student where s_name like 'S%';
++------+----------+----------+-----------+------+
+| s_id | s_branch | s_gender | s_name    | id   |
++------+----------+----------+-----------+------+
+|    1 | IT       | M        | Sunandan  |    1 |
+|    4 | IT       | F        | Sanskriti |    2 |
++------+----------+----------+-----------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student where s_id between 2 and 4;
++------+----------+----------+-----------+------+
+| s_id | s_branch | s_gender | s_name    | id   |
++------+----------+----------+-----------+------+
+|    2 | IT       | F        | Aanchal   |    1 |
+|    3 | IT       | M        | Manthan   |    2 |
+|    4 | IT       | F        | Sanskriti |    2 |
++------+----------+----------+-----------+------+
+3 rows in set (0.00 sec)
+
+------------------------------------------------------------------------------------------
+Arthimetic operations
+------------------------------------------------------------------------------------------
+
+mysql> select b_id, b_name, price, price+110 as "price + 110" from books;
++------+--------+-------+-------------+
+| b_id | b_name | price | price + 110 |
++------+--------+-------+-------------+
+|  100 | DBMS   |   400 |         510 |
+|  101 | M III  |   600 |         710 |
+|  102 | PA     |   400 |         510 |
+|  103 | CG     |   400 |         510 |
++------+--------+-------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select b_id, b_name, price, price+b_id as "price + book id" from books;
++------+--------+-------+-----------------+
+| b_id | b_name | price | price + book id |
++------+--------+-------+-----------------+
+|  100 | DBMS   |   400 |             500 |
+|  101 | M III  |   600 |             701 |
+|  102 | PA     |   400 |             502 |
+|  103 | CG     |   400 |             503 |
++------+--------+-------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql> select b_id, b_name, price, price%100 as "price % 100" from books;
++------+--------+-------+-------------+
+| b_id | b_name | price | price % 100 |
++------+--------+-------+-------------+
+|  100 | DBMS   |   400 |           0 |
+|  101 | M III  |   600 |           0 |
+|  102 | PA     |   400 |           0 |
+|  103 | CG     |   400 |           0 |
++------+--------+-------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select b_id, b_name, price, price/100 as "price / 100" from books;
++------+--------+-------+-------------+
+| b_id | b_name | price | price / 100 |
++------+--------+-------+-------------+
+|  100 | DBMS   |   400 |      4.0000 |
+|  101 | M III  |   600 |      6.0000 |
+|  102 | PA     |   400 |      4.0000 |
+|  103 | CG     |   400 |      4.0000 |
++------+--------+-------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select avg(price) as "avg" from books;
++----------+
+| avg      |
++----------+
+| 450.0000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select sum(price) as "sum" from books;
++------+
+| sum  |
++------+
+| 1800 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select count(price) as "count" from books;
++-------+
+| count |
++-------+
+|     4 |
++-------+
+1 row in set (0.00 sec)
+
+mysql> select max(price) as "max_price" from books;
++-----------+
+| max_price |
++-----------+
+|       600 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select min(price) as "min_price" from books;
++-----------+
+| min_price |
++-----------+
+|       400 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select round(avg(price),2) as "avg" from books;
++--------+
+| avg    |
++--------+
+| 450.00 |
++--------+
+1 row in set (0.00 sec)
+
+-----------------------------------------------------------------------------------------
+GROUP BY \ ORDER BY \ LIMIT
+-----------------------------------------------------------------------------------------
+
+mysql> select b_name, count(price) as "count" from books group by b_name;
++--------+-------+
+| b_name | count |
++--------+-------+
+| DBMS   |     1 |
+| M III  |     1 |
+| PA     |     1 |
+| CG     |     1 |
++--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Book ORDER BY b_name ASC;
+ERROR 1146 (42S02): Table 'er.book' doesn't exist
+mysql> SELECT * FROM books ORDER BY b_name ASC;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  102 | PA     |   400 | Kamna S     |     1300 |    2 |    1 |  171 |
++------+--------+-------+-------------+----------+------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM books ORDER BY b_name desc;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  102 | PA     |   400 | Kamna S     |     1300 |    2 |    1 |  171 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
++------+--------+-------+-------------+----------+------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select b_name, count(b_id) as "count" from books group by b_name having count(b_id) < 10;
++--------+-------+
+| b_name | count |
++--------+-------+
+| DBMS   |     1 |
+| M III  |     1 |
+| PA     |     1 |
+| CG     |     1 |
++--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from books limit 2;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
++------+--------+-------+-------------+----------+------+------+------+
+2 rows in set (0.00 sec)
+
+-------------------------------------------------------------------------------------------
+Date processing operations
+-------------------------------------------------------------------------------------------
+
+mysql> select curdate();
++------------+
+| curdate()  |
++------------+
+| 2023-04-17 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select current_time();
++----------------+
+| current_time() |
++----------------+
+| 07:49:58       |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select adddate('2003-02-06',31);
++--------------------------+
+| adddate('2003-02-06',31) |
++--------------------------+
+| 2003-03-09               |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select date('2003-02-06 01:02:03');
++-----------------------------+
+| date('2003-02-06 01:02:03') |
++-----------------------------+
+| 2003-02-06                  |
++-----------------------------+
+1 row in set (0.00 sec)
+
+------------------------------------------------------------------------------------------
+Joining operations
+------------------------------------------------------------------------------------------
+
+mysql> select * from student join admin on student.s_id = admin.a_id;
++------+----------+----------+----------+------+------+--------+
+| s_id | s_branch | s_gender | s_name   | id   | a_id | a_name |
++------+----------+----------+----------+------+------+--------+
+|    1 | IT       | M        | Sunandan |    1 |    1 | Tanmay |
+|    2 | IT       | F        | Aanchal  |    1 |    2 | Manish |
++------+----------+----------+----------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select student.s_id, student.s_name, student.s_branch, admin.a_id, ad
+min.a_name from student left join admin on student.s_id = admin.a_id;
++------+-----------+----------+------+--------+
+| s_id | s_name    | s_branch | a_id | a_name |
++------+-----------+----------+------+--------+
+|    1 | Sunandan  | IT       |    1 | Tanmay |
+|    2 | Aanchal   | IT       |    2 | Manish |
+|    3 | Manthan   | IT       | NULL | NULL   |
+|    4 | Sanskriti | IT       | NULL | NULL   |
++------+-----------+----------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select student.s_id, student.s_name, student.s_branch, admin.a_id, admin.a_name from student right join admin on student.s_id = admin.a_id;
++------+----------+----------+------+--------+
+| s_id | s_name   | s_branch | a_id | a_name |
++------+----------+----------+------+--------+
+|    1 | Sunandan | IT       |    1 | Tanmay |
+|    2 | Aanchal  | IT       |    2 | Manish |
++------+----------+----------+------+--------+
+2 rows in set (0.00 sec)
+
