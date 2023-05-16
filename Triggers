@@ -1,0 +1,126 @@
+Statement:
+
+Write and execute suitable database triggers .Consider row level and statement
+level triggers.
+
+--------------------------------------------------
+           	## Trigger ##
+---------------------------------------------------
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| adi                |
+| dani               |
+| employee           |
+| information_schema |
+| kunal              |
+| marks              |
+| mysql              |
+| om                 |
+| performance_schema |
+| pratical           |
+| rt                 |
+| shanti             |
+| sia09              |
+| student            |
+| students           |
+| sunny              |
+| swapnil            |
+| sys                |
+| tanny              |
+| test               |
+| vaidish            |
++--------------------+
+
+mysql> use tanny;
+Database changed
+
+mysql> create table trigger_concept (rollno int primary key, name varchar(20) not null, class varchar(20) not null, branch varchar(20) not null, marks int not null);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc trigger_concept;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int         | NO   | PRI | NULL    |       |
+| name   | varchar(20) | NO   |     | NULL    |       |
+| class  | varchar(20) | NO   |     | NULL    |       |
+| branch | varchar(20) | NO   |     | NULL    |       |
+| marks  | int         | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into trigger_concept values (1,"tanny","SE","IT",75);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into trigger_concept values (2,"banny","SE","IT",78);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into trigger_concept values (3,"zanny","SE","EnTc",85);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from trigger_concept;
++--------+-------+-------+--------+-------+
+| rollno | name  | class | branch | marks |
++--------+-------+-------+--------+-------+
+|      1 | tanny | SE    | IT     |    75 |
+|      2 | banny | SE    | IT     |    78 |
+|      3 | zanny | SE    | EnTc   |    85 |
++--------+-------+-------+--------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table delete_log (user_id varchar(20), description varchar(20));
+
+mysql> delimiter //
+mysql> create trigger mynigger
+    -> before delete on trigger_concept
+    -> for each row
+    -> begin
+    -> insert into delete_log
+    -> (user_id, description)
+    -> values(user(),'data deleted');
+    -> end //
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> delimiter ;
+mysql> delete from trigger_concept where rollno = 1;
+Query OK, 1 row affected (0.32 sec)
+
+mysql> select * from trigger_concept;
++--------+-------+-------+--------+-------+
+| rollno | name  | class | branch | marks |
++--------+-------+-------+--------+-------+
+|      2 | banny | SE    | IT     |    78 |
+|      3 | zanny | SE    | EnTc   |    85 |
++--------+-------+-------+--------+-------+
+2 rows in set (0.05 sec)
+
+mysql> select * from delete_log;
++----------------+--------------+
+| user_id        | description  |
++----------------+--------------+
+| root@localhost | data deleted |
++----------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> delete from trigger_concept where rollno = 2;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from delete_log;
++----------------+--------------+
+| user_id        | description  |
++----------------+--------------+
+| root@localhost | data deleted |
+| root@localhost | data deleted |
++----------------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from trigger_concept;
++--------+-------+-------+--------+-------+
+| rollno | name  | class | branch | marks |
++--------+-------+-------+--------+-------+
+|      3 | zanny | SE    | EnTc   |    85 |
++--------+-------+-------+--------+-------+
+1 row in set (0.00 sec)
