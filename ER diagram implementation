@@ -1,0 +1,194 @@
+Statement: Design and implement a database using DDL statements and apply
+normalization on them.
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------
+mysql> use ER;
+Database changed
+
+----------------------------------------------------
+ ## creation of admin table ##
+----------------------------------------------------
+
+mysql> create table admin (a_id int, a_name varchar(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc admin
+    -> ;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| a_id   | int         | YES  |     | NULL    |       |
+| a_name | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> alter table admin add primary key (a_id);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into admin values (1, "Tanmay");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into admin values (2, "Manish");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from admin;
++------+--------+
+| a_id | a_name |
++------+--------+
+|    1 | Tanmay |
+|    2 | Manish |
++------+--------+
+2 rows in set (0.00 sec)
+
+-----------------------------------------------------------
+## creating student table ##
+-----------------------------------------------------------
+
+mysql> create table student (s_id int primary key, s_branch varchar(20), s_gender varchar(10), s_name varchar(20) );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> alter table student add id int;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> alter table student add foreign key (id) references admin (a_id);
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> desc student;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| s_id     | int         | NO   | PRI | NULL    |       |
+| s_branch | varchar(20) | YES  |     | NULL    |       |
+| s_gender | varchar(10) | YES  |     | NULL    |       |
+| s_name   | varchar(20) | YES  |     | NULL    |       |
+| id       | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into student values (1,"IT","M","Sunandan",1), (2,"IT","F","Aanchal",1), (3,"IT","M","Manthan",2), (4,"IT","F","Sanskriti",2);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++------+----------+----------+-----------+------+
+| s_id | s_branch | s_gender | s_name    | id   |
++------+----------+----------+-----------+------+
+|    1 | IT       | M        | Sunandan  |    1 |
+|    2 | IT       | F        | Aanchal   |    1 |
+|    3 | IT       | M        | Manthan   |    2 |
+|    4 | IT       | F        | Sanskriti |    2 |
++------+----------+----------+-----------+------+
+4 rows in set (0.00 sec)
+
+---------------------------------------------------
+## creating publisher table ##
+----------------------------------------------------
+
+mysql> create table publisher (p_id int primary key, p_name varchar(20), publication_year year);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc publisher
+    -> ;
++------------------+-------------+------+-----+---------+-------+
+| Field            | Type        | Null | Key | Default | Extra |
++------------------+-------------+------+-----+---------+-------+
+| p_id             | int         | NO   | PRI | NULL    |       |
+| p_name           | varchar(20) | YES  |     | NULL    |       |
+| publication_year | year        | YES  |     | NULL    |       |
++------------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into publisher values (169, "pigu", 2003), (170, "jigu", 1998), (171, "migu", 1972);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from publisher;
++------+--------+------------------+
+| p_id | p_name | publication_year |
++------+--------+------------------+
+|  169 | pigu   |             2003 |
+|  170 | jigu   |             1998 |
+|  171 | migu   |             1972 |
++------+--------+------------------+
+3 rows in set (0.00 sec)
+
+-----------------------------------------------------
+## creating book table ##
+-----------------------------------------------------
+mysql> create table books(b_id int primary key,b_name varchar(10),price
+    -> int,author_name varchar(10),quantity int,
+    -> s_id int,foreign key(s_id) references student(s_id),
+    ->   a_id int,foreign key(a_id) references admin(a_id),
+    ->  p_id int,foreign key(p_id) references publisher(p_id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc books;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| b_id        | int         | NO   | PRI | NULL    |       |
+| b_name      | varchar(10) | YES  |     | NULL    |       |
+| price       | int         | YES  |     | NULL    |       |
+| author_name | varchar(10) | YES  |     | NULL    |       |
+| quantity    | int         | YES  |     | NULL    |       |
+| s_id        | int         | YES  | MUL | NULL    |       |
+| a_id        | int         | YES  | MUL | NULL    |       |
+| p_id        | int         | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> insert into books values (100,"DBMS",400,"Prachi N",1000,1,1,169),
+    -> (101,"M III",600,"Mandar D",1050,1,2,171),
+    -> (102,"PA",400,"Kamna S",1300,2,1,171),
+    -> (103,"CG",400,"Megha M",1000,1,1,170);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from books;
++------+--------+-------+-------------+----------+------+------+------+
+| b_id | b_name | price | author_name | quantity | s_id | a_id | p_id |
++------+--------+-------+-------------+----------+------+------+------+
+|  100 | DBMS   |   400 | Prachi N    |     1000 |    1 |    1 |  169 |
+|  101 | M III  |   600 | Mandar D    |     1050 |    1 |    2 |  171 |
+|  102 | PA     |   400 | Kamna S     |     1300 |    2 |    1 |  171 |
+|  103 | CG     |   400 | Megha M     |     1000 |    1 |    1 |  170 |
++------+--------+-------+-------------+----------+------+------+------+
+4 rows in set (0.00 sec)
+------------------------------------------------------------------------
+mysql> create table borrow(doi date , return_date date ,duedate date , s_id int
+    -> not null,foreign key(s_id) references student(s_id),b_id int not null,foreign
+    -> key(b_id) references books(b_id),unique(s_id,b_id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc borrow
+    -> ;
++-------------+------+------+-----+---------+-------+
+| Field       | Type | Null | Key | Default | Extra |
++-------------+------+------+-----+---------+-------+
+| doi         | date | YES  |     | NULL    |       |
+| return_date | date | YES  |     | NULL    |       |
+| duedate     | date | YES  |     | NULL    |       |
+| s_id        | int  | NO   | PRI | NULL    |       |
+| b_id        | int  | NO   | PRI | NULL    |       |
++-------------+------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into borrow values ("2023-03-31","2023-04-12","2023-04-14" ,2,102);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into borrow values ("2023-03-21","2023-04-05","2023-04-11" ,1,101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from borrow
+    -> ;
++------------+-------------+------------+------+------+
+| doi        | return_date | duedate    | s_id | b_id |
++------------+-------------+------------+------+------+
+| 2023-03-21 | 2023-04-05  | 2023-04-11 |    1 |  101 |
+| 2023-03-31 | 2023-04-12  | 2023-04-14 |    2 |  102 |
++------------+-------------+------------+------+------+
+2 rows in set (0.00 sec)
